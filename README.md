@@ -1,5 +1,11 @@
 # MMM-lyft
 
+A module for the [Magic Mirror](https://magicmirror.builders/). This module diplays ETA estimates and primetime percentage for Lyft.
+
+The module is loosely based on [another Uber module](https://github.com/derickson/MMderickson/tree/master/uber) that I could not get working due to a CORS error. 
+
+## Installation
+
 To install, clone this repository into your modules folder. Then add the following to your configuration file:
 ```
 {
