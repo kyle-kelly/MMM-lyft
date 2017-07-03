@@ -23,6 +23,4 @@ The following properties can be configured:
 | Options | Description|
 | --- | --- |
 |```header```| Can be changed to any **string** or left **blank**: ```' '``` |
-| ```ride_type```| The ride type for time and cost estimates. 
-**Possible values:** ```'Lyft Plus'```, ```'Lyft Line'```, ```'Lyft Premier'```, ```'Lyft Lux'```, ```'Lyft Lux SUV'```. 
-**Default value:** ```'Lyft'```.|
+| ```ride_type```| The ride type for time and cost estimates. <br> **Possible values:** ```'Lyft Plus'```, ```'Lyft Line'```, ```'Lyft Premier'```, ```'Lyft Lux'```, ```'Lyft Lux SUV'```. <br> **Default value:** ```'Lyft'```.|
