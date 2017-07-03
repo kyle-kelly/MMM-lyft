@@ -35,10 +35,8 @@ module.exports = NodeHelper.create({
 			}
 		}, function (error, response, body) {
 		  	if (!error && response.statusCode == 200) {
-				self.sendSocketNotification("OAUTH", body);
 				var json = JSON.parse(body);
 				self.config.access_token = json.access_token;
-				self.sendSocketNotification("ACCESS", self.config.access_token);
 				self.getData();
 			}
 			else {
@@ -52,11 +50,9 @@ module.exports = NodeHelper.create({
 	
 	getData: function() {
 		var self = this;
-
-		this.sendSocketNotification("ACCESS 2", this.config.access_token);
 		
 		request({
-			url: "https://api.lyft.com/v1/eta?lat=" + this.config.lat + "&lng=" + this.config.lng,
+			url: 'https://api.lyft.com/v1/eta?lat=' + this.config.lat + '&lng=' + this.config.lng,
 			method: 'GET',
 			auth: {
 				'bearer': this.config.access_token
@@ -68,6 +64,22 @@ module.exports = NodeHelper.create({
 			}
 			else {
 				self.sendSocketNotification("ERROR", "In TIME request with status code: " + response.statusCode);
+			}
+		});
+
+		request({
+			url: 'https://api.lyft.com/v1/cost?start_lat=' + this.config.lat + '&start_lng=' + this.config.lng + '&end_lat=' + this.config.lat + '&end_lng=' + this.config.lng,
+			method: 'GET',
+			auth: {
+				'bearer': this.config.access_token
+			}
+		}, function (error, response, body) {
+			
+			if (!error && response.statusCode == 200) {
+				self.sendSocketNotification("COST", body);
+			}
+			else {
+				self.sendSocketNotification("ERROR", "In COST request with status code: " + response.statusCode);
 			}
 		});
 

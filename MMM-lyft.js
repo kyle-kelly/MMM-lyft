@@ -54,7 +54,7 @@
 		var self = this;
 		Log.log("ProcessLyft");
 
-		// go through the time data to find the lyft product
+		// go through the time data to find the lyft eta estimate
 		if (FLAG === "TIME"){
 			Log.log("Time:");
 			Log.log(result);
@@ -66,6 +66,22 @@
 					// convert estimated seconds to minutes
 					this.lyftTime = rtime.eta_seconds / 60;
 					Log.log("Lyft time = " + this.lyftTime);
+					break;
+				}
+			}
+		}
+
+		// go through the ride estimate data to find the lyft primetime percentage
+		else if (FLAG === "COST"){
+			Log.log("Cost:");
+			Log.log(result);
+			for( var i=0, count = result.cost_estimates.length; i< count; i++) {
+				var rprice = result.cost_estimates[i];
+
+				if(rprice.display_name === this.config.ride_type){
+					// grab the surge pricing
+					this.lyftSurge = rprice.primetime_percentage;
+					Log.log("Lyft surge: " + this.lyftSurge);
 					break;
 				}
 			}
@@ -87,7 +103,10 @@
 
 		if(this.loaded) {
 			var myText = this.config.ride_type + " in "+ this.lyftTime +" min ";
-
+			// only show the surge pricing if it is above 1.0
+			if(typeof this.lyftSurge !== "undefined" && this.lyftSurge !== "0%"){
+				myText += " - " + this.lyftSurge + " primetime percentage";
+			}
 			lyftText.innerHTML = myText;
 		} else {
 			// Loading message
@@ -102,9 +121,13 @@
 	},
 
 	socketNotificationReceived: function(notification, payload) {
-		Log.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
+		//Log.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
 		if (notification === "TIME") {
 			this.processLyft("TIME", JSON.parse(payload));
+			this.updateDom(this.config.animationSpeed);
+		}
+		else if (notification === "COST") {
+			this.processLyft("COST", JSON.parse(payload));
 			this.loaded = true;
 			this.updateDom(this.config.animationSpeed);
 		}
