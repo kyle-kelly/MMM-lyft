@@ -41,11 +41,11 @@ module.exports = NodeHelper.create({
 			}
 			else {
 				self.sendSocketNotification("ERROR", "In OAUTH request with status code: " + response.statusCode);
-				setTimeout(function() { self.getAccessToken(); }, this.config.updateInterval);
-			}
+			}		
 		});
 
-		setTimeout(function() { self.getData(); }, this.config.accessUpdateInterval);
+		setTimeout(function() { self.getAccessToken(); }, this.config.updateInterval);
+
 	},				
 	
 	getData: function() {
@@ -83,7 +83,7 @@ module.exports = NodeHelper.create({
 			}
 		});
 
-		setTimeout(function() { self.getData(); }, this.config.updateInterval);	
+		setTimeout(function() { self.getAccessToken(); }, this.config.updateInterval);	
 	},
 
 	socketNotificationReceived: function(notification, payload) {
