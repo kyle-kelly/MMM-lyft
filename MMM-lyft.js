@@ -104,7 +104,7 @@
 			var myText = this.config.ride_type + " in "+ this.lyftTime +" min ";
 			// only show the surge pricing if it is above 1.0
 			if(typeof this.lyftSurge !== "undefined" && this.lyftSurge !== "0%"){
-				myText += " - " + this.lyftSurge + " primetime percentage";
+				myText += " + " + this.lyftSurge + " Prime Time";
 			}
 			lyftText.innerHTML = myText;
 		} else {

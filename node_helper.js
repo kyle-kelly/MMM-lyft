@@ -64,6 +64,7 @@ module.exports = NodeHelper.create({
 			}
 			else {
 				self.sendSocketNotification("ERROR", "In TIME request with status code: " + response.statusCode);
+				self.getAccessToken();
 			}
 		});
 
@@ -80,10 +81,11 @@ module.exports = NodeHelper.create({
 			}
 			else {
 				self.sendSocketNotification("ERROR", "In COST request with status code: " + response.statusCode);
+				self.getAccessToken();
 			}
 		});
 
-		setTimeout(function() { self.getAccessToken(); }, this.config.updateInterval);	
+		setTimeout(function() { self.getData(); }, this.config.updateInterval);	
 	},
 
 	socketNotificationReceived: function(notification, payload) {
