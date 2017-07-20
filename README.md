@@ -1,5 +1,7 @@
 # MMM-lyft
 
+![Alt](/img/lyft-screenshot.png?raw=True "A preview of the Lyft module.")
+
 A module for the [Magic Mirror](https://magicmirror.builders/). This module displays ETA and primetime percentage for Lyft.
 
 The module is loosely based on [another Uber module](https://github.com/derickson/MMderickson/tree/master/uber) that I could not get working due to a CORS error. 
@@ -29,4 +31,4 @@ The following properties can be configured:
 | Options | Description|
 | --- | --- |
 |```header```| Can be changed to any **string** or left **blank**: ```' '``` |
-| ```ride_type```| The ride type for time and cost estimates. <br> **Possible values:** ```'Lyft Plus'```, ```'Lyft Line'```, ```'Lyft Premier'```, ```'Lyft Lux'```, ```'Lyft Lux SUV'```. <br> **Default value:** ```'Lyft'```.|
+| ```ride_type```| The ride type for time and cost estimates. Add to the ```config: {}``` section. <br> **Possible values:** ```'Lyft Plus'```, ```'Lyft Line'```, ```'Lyft Premier'```, ```'Lyft Lux'```, ```'Lyft Lux SUV'```. <br> **Default value:** ```'Lyft'```.|

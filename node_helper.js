@@ -35,17 +35,14 @@ module.exports = NodeHelper.create({
 			}
 		}, function (error, response, body) {
 		  	if (!error && response.statusCode == 200) {
+				self.sendSocketNotification("ACCESS_SUCCESS", null);
 				var json = JSON.parse(body);
 				self.config.access_token = json.access_token;
-				self.getData();
 			}
 			else {
-				self.sendSocketNotification("ERROR", "In OAUTH request with status code: " + response.statusCode);
+				self.sendSocketNotification("ACCESS_ERROR", "In OAUTH request with status code: " + response.statusCode);
 			}		
 		});
-
-		setTimeout(function() { self.getAccessToken(); }, this.config.updateInterval);
-
 	},				
 	
 	getData: function() {
@@ -63,8 +60,7 @@ module.exports = NodeHelper.create({
 				self.sendSocketNotification("TIME", body);
 			}
 			else {
-				self.sendSocketNotification("ERROR", "In TIME request with status code: " + response.statusCode);
-				self.getAccessToken();
+				self.sendSocketNotification("TIME_ERROR", "In TIME request with status code: " + response.statusCode);
 			}
 		});
 
@@ -80,18 +76,20 @@ module.exports = NodeHelper.create({
 				self.sendSocketNotification("COST", body);
 			}
 			else {
-				self.sendSocketNotification("ERROR", "In COST request with status code: " + response.statusCode);
-				self.getAccessToken();
+				self.sendSocketNotification("COST_ERROR", "In COST request with status code: " + response.statusCode);
 			}
 		});
-
-		setTimeout(function() { self.getData(); }, this.config.updateInterval);	
 	},
 
 	socketNotificationReceived: function(notification, payload) {
-		if (notification === 'CONFIG') {
+		if (notification === "CONFIG") {
 			this.config = payload;
+		}
+		else if (notification === "ACCESS" && this.config !== null) {
 			this.getAccessToken();
+		}
+		else if (notification === "DATA" && this.config !== null){
+			this.getData();
 		}
 	}
 });
