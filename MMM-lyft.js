@@ -123,7 +123,7 @@
 		if(this.time_loaded && this.cost_loaded) {
 			var myText = this.config.ride_type + " in "+ this.lyftTime +" min ";
 			// only show the surge pricing if it is above 1.0
-			if(typeof this.lyftSurge !== "undefined" && this.lyftSurge !== "0%"){
+			if(this.lyftSurge && this.lyftSurge !== "0%"){
 				myText += " + " + this.lyftSurge;
 			}
 			lyftText.innerHTML = myText;
