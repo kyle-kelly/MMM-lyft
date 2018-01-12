@@ -16,7 +16,7 @@
 		clientId: null,
 		clientSecret: null,
 		access_token: null,
-		ride_type: 'Lyft',
+		ride_types: [ 'Lyft' ],
 
 		updateInterval: 5 * 60 * 1000, // every 5 minutes
 		accessUpdateInterval: 24 * 60 * 60 * 1000, // every 24 hours
@@ -40,8 +40,8 @@
 		moment.locale(config.language);
 
 		// variables that will be loaded from service
-		this.lyftTime = null;
-		this.lyftSurge = null;
+		this.lyftTimes = [];
+		this.lyftSurges = [];
 
 		this.time_loaded = null;
 		this.cost_loaded = null;
@@ -81,11 +81,16 @@
 
 				var rtime = result.eta_estimates[i];
 				
-				if(rtime.display_name === this.config.ride_type){
-					// convert estimated seconds to minutes
-					this.lyftTime = rtime.eta_seconds / 60;
-					Log.log("Lyft time = " + this.lyftTime);
-					break;
+				
+				// iterate through each ride type in config list
+	            for (var ride_idx = 0; ride_idx < this.config.ride_types.length; ride_idx++) {
+	            
+					if(rtime.display_name === this.config.ride_types[ride_idx]){
+						
+						// convert estimated seconds to minutes
+						this.lyftTimes[ride_idx] = rtime.eta_seconds / 60;
+						Log.log("Lyft time = " + this.lyftTimes[ride_idx]);
+					}
 				}
 			}
 		}
@@ -97,11 +102,15 @@
 			for( var i=0, count = result.cost_estimates.length; i< count; i++) {
 				var rprice = result.cost_estimates[i];
 
-				if(rprice.display_name === this.config.ride_type){
-					// grab the surge pricing
-					this.lyftSurge = rprice.primetime_percentage;
-					Log.log("Lyft surge: " + this.lyftSurge);
-					break;
+				// iterate through each ride type in config list
+	            for (var cost_idx = 0; cost_idx < this.config.ride_types.length; cost_idx++) {
+					
+					if(rprice.display_name === this.config.ride_types[cost_idx]){
+						
+						// grab the surge pricing
+						this.lyftSurges[cost_idx] = rprice.primetime_percentage;
+						Log.log("Lyft surge: " + this.lyftSurges[cost_idx]);
+					}
 				}
 			}
 		}
@@ -111,31 +120,41 @@
 	getDom: function() {
 		var wrapper = document.createElement("div");
 
-		var lyft = document.createElement("div");
-		lyft.className = "lyftButton";
-		
-		var lyftIcon = document.createElement("img");
-		lyftIcon.className = "badge";
-		lyftIcon.src = "modules/MMM-lyft/LYFT_API_Badges_1x_22px.png";
+		// iterate through each ride type in config list
+        for (var element_idx = 0; element_idx < this.config.ride_types.length; element_idx++) {
 
-		var lyftText = document.createElement("span");
+			var lyft = document.createElement("div");
+			lyft.className = "lyftButton";
+			
+			var lyftIcon = document.createElement("img");
+			lyftIcon.className = "badge";
+			lyftIcon.src = "modules/MMM-lyft/LYFT_API_Badges_1x_22px.png";
 
-		if(this.time_loaded && this.cost_loaded) {
-			var myText = this.config.ride_type + " in "+ this.lyftTime +" min ";
-			// only show the surge pricing if it is above 1.0
-			if(this.lyftSurge && this.lyftSurge !== "0%"){
-				myText += " + " + this.lyftSurge;
+			var lyftText = document.createElement("span");
+
+			if(this.time_loaded && this.cost_loaded) {
+				
+				var myText = this.config.ride_types[element_idx] + " in "+ this.lyftTimes[element_idx] +" min ";
+				// only show the surge pricing if it is above 1.0
+				if(this.lyftSurges[element_idx] && this.lyftSurges[element_idx] !== "0%"){
+
+					myText += " + " + this.lyftSurges[element_idx];
+				}
+				
+				lyftText.innerHTML = myText;
+			} 
+			else {
+				
+				// Loading message
+				lyftText.innerHTML = "Checking Lyft status ...";
 			}
-			lyftText.innerHTML = myText;
-		} else {
-			// Loading message
-			lyftText.innerHTML = "Checking Lyft status ...";
-		}
 
-		lyft.appendChild(lyftIcon);
-		lyft.appendChild(lyftText);
+			lyft.appendChild(lyftIcon);
+			lyft.appendChild(lyftText);
+
+			wrapper.appendChild(lyft);
+		}
 		
-		wrapper.appendChild(lyft);
 		return wrapper;
 	},
 
