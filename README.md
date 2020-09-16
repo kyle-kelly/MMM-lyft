@@ -1,3 +1,6 @@
+# Deprecation Notice
+Unfortunatley, Lyft has shut down their public API. This app is no longer funtional at the moment.
+
 # MMM-lyft
 
 ![Alt](/img/lyft-screenshot.png?raw=True "A preview of the Lyft module.")
